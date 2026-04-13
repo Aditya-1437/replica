@@ -54,19 +54,24 @@ export default function Navbar() {
                 <span className="text-xs text-slate-muted">{user.email}</span>
               </div>
 
-              <div className="flex items-center gap-3 bg-white pl-1.5 pr-4 py-1.5 rounded-full border border-gray-100 shadow-sm">
+              <Link
+                href="/account"
+                className="flex items-center gap-3 bg-white pl-1.5 pr-4 py-1.5 rounded-full border border-gray-100 shadow-sm hover:border-sage-accent/30 hover:shadow-md transition-all active:scale-95"
+              >
                 <div className="w-8 h-8 rounded-full bg-sage-accent/10 flex items-center justify-center text-sage-accent">
                   <UserIcon className="w-4 h-4" />
                 </div>
                 <span className="text-sm font-medium text-slate-700 md:hidden">{user.name.split(' ')[0]}</span>
-                <button
-                  onClick={logout}
-                  className="ml-2 p-1 text-gray-400 hover:text-red-500 transition-colors"
-                  title="Logout"
-                >
-                  <LogOut className="w-4 h-4" />
-                </button>
-              </div>
+                <span className="hidden md:block text-sm font-medium text-slate-700">Account</span>
+              </Link>
+
+              <button
+                onClick={logout}
+                className="p-2 text-gray-400 hover:text-red-500 transition-colors"
+                title="Logout"
+              >
+                <LogOut className="w-4 h-4" />
+              </button>
             </>
           ) : (
             <Link 

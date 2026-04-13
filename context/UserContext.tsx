@@ -5,11 +5,13 @@ import React, { createContext, useContext, useState, useEffect } from 'react';
 interface User {
   name: string;
   email: string;
+  techStack?: string;
 }
 
 interface UserContextType {
   user: User | null;
   login: (name: string, email: string) => void;
+  updateUser: (data: Partial<User>) => void;
   logout: () => void;
   isLoaded: boolean;
 }
@@ -38,13 +40,20 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
     localStorage.setItem('replica_user', JSON.stringify(newUser));
   };
 
+  const updateUser = (data: Partial<User>) => {
+    if (!user) return;
+    const updatedUser = { ...user, ...data };
+    setUser(updatedUser);
+    localStorage.setItem('replica_user', JSON.stringify(updatedUser));
+  };
+
   const logout = () => {
     setUser(null);
     localStorage.removeItem('replica_user');
   };
 
   return (
-    <UserContext.Provider value={{ user, login, logout, isLoaded }}>
+    <UserContext.Provider value={{ user, login, updateUser, logout, isLoaded }}>
       {children}
     </UserContext.Provider>
   );
