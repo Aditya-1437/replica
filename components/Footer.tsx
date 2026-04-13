@@ -45,9 +45,9 @@ export default function Footer() {
             <div className="space-y-6">
               <h4 className="font-bold text-slate-900 uppercase tracking-widest text-sm">Legal</h4>
               <ul className="space-y-4 text-slate-muted">
-                <li><a href="#" className="hover:text-sage-accent transition-colors">Privacy Policy</a></li>
-                <li><a href="#" className="hover:text-sage-accent transition-colors">Terms of Service</a></li>
-                <li><a href="#" className="hover:text-sage-accent transition-colors">Cookie Policy</a></li>
+                <li><Link href="/privacy" className="hover:text-sage-accent transition-colors">Privacy Policy</Link></li>
+                <li><Link href="/terms" className="hover:text-sage-accent transition-colors">Terms of Service</Link></li>
+                <li><Link href="/cookies" className="hover:text-sage-accent transition-colors">Cookie Policy</Link></li>
               </ul>
             </div>
           </div>
