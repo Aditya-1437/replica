@@ -18,7 +18,6 @@ export default function InterviewSession() {
     resetSession 
   } = useSession();
 
-  const [isFocused, setIsFocused] = React.useState(false);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
   // Auto-expand textarea
@@ -58,112 +57,42 @@ export default function InterviewSession() {
   const currentAnswer = answers[currentStep] || '';
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-sage-bg via-white to-white flex flex-col font-sans">
-      {/* Progress Bar (Fluid Growth) */}
-      <div className="fixed top-0 left-0 w-full h-1 bg-gray-100 z-50">
-        <motion.div
-          initial={{ width: 0 }}
-          animate={{ 
-            width: `${((currentStep + 1) / questions.length) * 100}%`,
-            backgroundColor: currentStep > 7 ? '#4A6741' : '#607D8B'
-          }}
-          className="h-full shadow-[0_0_10px_rgba(74,103,65,0.4)] transition-colors duration-1000"
-        />
-      </div>
-
-      <main className="flex-1 max-w-[800px] mx-auto w-full px-6 pt-32 pb-40">
-        <AnimatePresence mode="wait">
-          <motion.div
-            key={currentStep}
-            initial={{ opacity: 0, x: 20 }}
-            animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: -20 }}
-            transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-            className="space-y-12"
-          >
-            {/* Question Indicator */}
-            <div className="flex justify-center">
-              <span className="px-4 py-1.5 rounded-full bg-sage-accent/5 border border-sage-accent/10 text-sage-accent text-xs font-bold uppercase tracking-widest">
-                Question {currentStep + 1} of {questions.length}
-              </span>
-            </div>
-
-            {/* Question Text */}
-            <div className="text-center space-y-4">
-              <h1 className="text-4xl md:text-5xl font-serif font-bold text-slate-900 leading-tight">
-                {questions[currentStep]}
-              </h1>
-            </div>
-
-            {/* Premium Response Area */}
+    <div className="h-screen w-screen overflow-hidden flex flex-row font-sans bg-white">
+      {/* LEFT PANE (60%) - The Workspace */}
+      <div className="w-[60%] h-full flex flex-col bg-white">
+        {/* Answer Area */}
+        <div className="flex-1 overflow-y-auto p-16 md:p-20 flex flex-col relative">
+          <AnimatePresence mode="wait">
             <motion.div
-              animate={{ 
-                scale: isFocused ? 1.01 : 1,
-                backgroundColor: isFocused ? '#FFFFFF' : '#F9FBF9',
-              }}
-              transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
-              className={cn(
-                "relative p-8 md:p-12 rounded-[2.5rem] transition-shadow duration-500 min-h-[400px] cursor-text",
-                isFocused 
-                  ? "shadow-[0_20px_50px_rgba(74,103,65,0.1)] ring-1 ring-sage-accent/5" 
-                  : "shadow-sm border border-transparent"
-              )}
-              onClick={() => textareaRef.current?.focus()}
+              key={currentStep}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.5, ease: 'easeInOut' }}
+              className="flex-1 flex flex-col relative w-full h-full"
             >
-              {/* Animated Placeholder */}
-              <AnimatePresence>
-                {!currentAnswer && (
-                  <motion.p
-                    initial={{ opacity: 1, y: 0 }}
-                    animate={isFocused ? { opacity: 0.3, y: -4 } : { opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -10 }}
-                    className="absolute top-8 md:top-12 left-8 md:left-12 text-xl md:text-2xl text-gray-300 pointer-events-none"
-                  >
-                    Type your response here... take your time, clarity is key.
-                  </motion.p>
-                )}
-              </AnimatePresence>
-
-              {/* Response Input Area */}
-              <div className="relative">
-                {/* Display Layer (Mirrors the textarea for custom cursor positioning) */}
-                <div 
-                  className="absolute inset-0 pointer-events-none text-xl md:text-2xl font-sans text-slate-700 leading-relaxed whitespace-pre-wrap break-words"
-                  aria-hidden="true"
-                >
-                  {currentAnswer}
-                  {isFocused && (
-                    <motion.span 
-                      layoutId="cursor"
-                      className="inline-block custom-cursor w-[3px] h-[1.2em] translate-y-[0.2em] ml-0.5"
-                    />
-                  )}
-                </div>
-
-                {/* Actual Input Layer */}
-                <textarea
-                  ref={textareaRef}
-                  value={currentAnswer}
-                  onChange={(e) => setAnswer(currentStep, e.target.value)}
-                  onFocus={() => setIsFocused(true)}
-                  onBlur={() => setIsFocused(false)}
-                  className="w-full bg-transparent border-none focus:ring-0 text-xl md:text-2xl font-sans text-transparent leading-relaxed caret-transparent resize-none min-h-[300px] p-0 relative z-10"
-                  style={{ WebkitTextFillColor: 'transparent' }}
-                />
-              </div>
-
+              {/* Readability Guide (80 characters) */}
+              <div 
+                className="absolute top-0 bottom-0 w-px bg-gray-200/60 pointer-events-none z-0 hidden md:block text-lg font-sans font-medium"
+                style={{ left: '80ch' }}
+              />
+              
+              <textarea
+                ref={textareaRef}
+                value={currentAnswer}
+                onChange={(e) => setAnswer(currentStep, e.target.value)}
+                placeholder="Type your response here... take your time, clarity is key."
+                className="w-full flex-1 bg-transparent border-none focus:ring-0 text-lg font-sans font-medium text-slate-800 caret-[#4A6741] resize-none p-0 outline-none placeholder:text-gray-300 min-h-[500px] relative z-10"
+              />
             </motion.div>
-          </motion.div>
-        </AnimatePresence>
-      </main>
+          </AnimatePresence>
+        </div>
 
-
-      {/* Sticky Bottom Controls */}
-      <div className="fixed bottom-0 left-0 w-full p-6 md:p-10 bg-gradient-to-t from-white via-white to-transparent pointer-events-none">
-        <div className="max-w-[800px] mx-auto w-full flex items-center justify-between pointer-events-auto">
+        {/* Footer Controls - Left Pane Only */}
+        <div className="w-full px-16 py-6 border-t border-gray-100 flex items-center justify-between bg-white shrink-0">
           <button
             onClick={resetSession}
-            className="text-gray-400 hover:text-slate-900 font-medium transition-colors flex items-center gap-2 group"
+            className="text-gray-400 hover:text-slate-600 font-medium transition-colors flex items-center gap-2 group opacity-60 hover:opacity-100"
           >
             <LogOut className="w-4 h-4 transition-transform group-hover:-translate-x-1" />
             Exit Session
@@ -173,17 +102,54 @@ export default function InterviewSession() {
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
             onClick={handleNext}
-            disabled={!answers[currentStep].trim()}
+            disabled={!answers[currentStep]?.trim()}
             className={cn(
-              "px-10 py-4 rounded-2xl font-bold flex items-center gap-3 transition-all shadow-xl",
-              answers[currentStep].trim() 
-                ? "bg-sage-accent text-white shadow-sage-accent/20 hover:bg-sage-accent/90" 
+              "px-8 py-3 rounded-xl font-medium flex items-center gap-2 transition-all shadow-sm",
+              answers[currentStep]?.trim() 
+                ? "bg-[#4A6741] text-white hover:bg-[#3D5536]" 
                 : "bg-gray-100 text-gray-400 cursor-not-allowed shadow-none"
             )}
           >
             {currentStep === questions.length - 1 ? 'Finish Interview' : 'Next Question'}
-            <ArrowRight className="w-5 h-5" />
+            <ArrowRight className="w-4 h-4" />
           </motion.button>
+        </div>
+      </div>
+
+      {/* RIGHT PANE (40%) - The Context */}
+      <div className="w-[40%] h-full bg-[#F0F4F2] border-l border-gray-200 relative flex flex-col">
+        {/* Progress Section */}
+        <div className="w-full relative pt-8 px-12 flex flex-col">
+          <div className="absolute top-0 left-0 w-full h-1 bg-[#E2E8E4]">
+            <motion.div
+              initial={{ width: 0 }}
+              animate={{ 
+                width: `${((currentStep + 1) / questions.length) * 100}%`,
+                backgroundColor: '#4A6741'
+              }}
+              className="h-full transition-colors duration-1000"
+            />
+          </div>
+          <div className="text-right mt-4 text-[#4A6741] text-sm font-bold uppercase tracking-widest opacity-80">
+            Question {currentStep + 1} of {questions.length}
+          </div>
+        </div>
+
+        {/* Question Text Centered */}
+        <div className="flex-1 flex flex-col justify-center px-12 md:px-20 pb-20">
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={currentStep}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.5, ease: 'easeInOut' }}
+            >
+              <h2 className="text-2xl font-serif font-bold text-[#2F3E2B] leading-relaxed">
+                {questions[currentStep]}
+              </h2>
+            </motion.div>
+          </AnimatePresence>
         </div>
       </div>
     </div>

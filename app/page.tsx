@@ -9,16 +9,22 @@ import InterviewSection from "@/components/InterviewSection";
 import InterviewSession from "@/components/InterviewSession";
 import ResultsDashboard from "@/components/ResultsDashboard";
 import Footer from "@/components/Footer";
+import LoadingOverlay from "@/components/LoadingOverlay";
 import { motion, AnimatePresence } from "framer-motion";
 
 export default function Home() {
   const { user, isLoaded } = useUser();
-  const { currentView } = useSession();
+  const { currentView, isAnalyzing, isLoadingQuestions } = useSession();
 
   if (!isLoaded) return null;
 
   return (
     <main className="min-h-screen flex flex-col overflow-x-hidden">
+      <AnimatePresence>
+        {isLoadingQuestions && <LoadingOverlay key="loading-questions" message="Preparing your interview questions..." />}
+        {isAnalyzing && <LoadingOverlay key="analyzing" message="Consulting the Interview Panel..." />}
+      </AnimatePresence>
+
       <AnimatePresence mode="wait">
         {!user ? (
           <Gatekeeper key="gatekeeper" />

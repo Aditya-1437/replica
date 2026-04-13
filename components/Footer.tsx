@@ -4,6 +4,8 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { Mail, Send } from 'lucide-react';
 
+import Link from 'next/link';
+
 export default function Footer() {
   return (
     <footer className="bg-white pt-24 pb-12 border-t border-gray-100">
@@ -34,9 +36,9 @@ export default function Footer() {
             <div className="space-y-6">
               <h4 className="font-bold text-slate-900 uppercase tracking-widest text-sm">Platform</h4>
               <ul className="space-y-4 text-slate-muted">
-                <li><a href="#" className="hover:text-sage-accent transition-colors">Technical Track</a></li>
-                <li><a href="#" className="hover:text-sage-accent transition-colors">Behavioral Track</a></li>
-                <li><a href="#" className="hover:text-sage-accent transition-colors">Pricing</a></li>
+                <li><Link href="/" className="hover:text-sage-accent transition-colors">Technical Track</Link></li>
+                <li><Link href="/" className="hover:text-sage-accent transition-colors">Behavioral Track</Link></li>
+                <li><Link href="/pricing" className="hover:text-sage-accent transition-colors">Pricing</Link></li>
               </ul>
             </div>
             <div className="space-y-6">

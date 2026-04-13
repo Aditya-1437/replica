@@ -3,7 +3,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { Sparkles } from 'lucide-react';
-import KnowledgeGraph from './KnowledgeGraph';
+import ZenFocusIllustration from './ZenFocusIllustration';
 
 export default function Hero() {
   return (
@@ -53,24 +53,16 @@ export default function Hero() {
         </motion.div>
       </div>
 
-      {/* Decorative elements */}
-      <div className="absolute top-0 right-0 w-1/2 h-full pointer-events-none overflow-hidden">
-        <div className="relative w-full h-full">
-          <KnowledgeGraph />
-          
-          <motion.div
-            initial={{ opacity: 0, x: 100 }}
-            animate={{ opacity: 0.4, x: 0 }}
-            transition={{ delay: 0.5, duration: 1.5 }}
-            className="absolute top-1/4 right-0 w-[600px] h-[600px] bg-sage-accent/5 rounded-full blur-3xl -z-10"
-          />
-          <motion.div
-            initial={{ opacity: 0, x: 100 }}
-            animate={{ opacity: 0.6, x: 0 }}
-            transition={{ delay: 0.7, duration: 1.5 }}
-            className="absolute bottom-1/4 -right-20 w-[400px] h-[400px] bg-slate-muted/5 rounded-full blur-3xl -z-10"
-          />
-        </div>
+      {/* Zen Focus Illustration Area */}
+      <div className="absolute top-0 right-0 w-1/2 h-full hidden lg:block z-0 pointer-events-auto">
+        <motion.div
+          initial={{ opacity: 0, x: 30 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ delay: 0.3, duration: 1, ease: 'easeOut' }}
+          className="relative w-full h-full flex items-center justify-center p-12"
+        >
+          <ZenFocusIllustration />
+        </motion.div>
       </div>
     </section>
   );

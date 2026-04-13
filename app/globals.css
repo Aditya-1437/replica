@@ -15,7 +15,7 @@
   --color-sage-accent: var(--sage-accent);
   --color-slate-muted: var(--slate-muted);
   --color-white: var(--white);
-  
+
   --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui;
   --font-mono: var(--font-geist-mono), ui-monospace, SFMono-Regular;
 }
@@ -32,12 +32,18 @@ body {
 }
 
 @keyframes soft-pulse {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.2; }
+
+  0%,
+  100% {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: 0.2;
+  }
 }
 
 .custom-cursor {
   animation: soft-pulse 1.2s ease-in-out infinite;
   background-color: #4A6741;
 }
-

@@ -5,33 +5,41 @@ import React, { createContext, useContext, useState } from 'react';
 export type AppView = 'home' | 'interview' | 'results';
 export type InterviewType = 'technical' | 'behavioral' | 'hr';
 
+export interface EvaluationResult {
+  overallScore: number;
+  metrics: {
+    clarity: number;
+    confidence: number;
+    technical: number;
+  };
+  feedback: {
+    strengths: string[];
+    growthAreas: string[];
+  };
+  detailedReview: {
+    question: string;
+    userAnswer: string;
+    expectedAnswer: string;
+    specificFeedback: string;
+  }[];
+}
+
 interface SessionContextType {
   currentView: AppView;
   setCurrentView: (view: AppView) => void;
   interviewType: InterviewType | null;
-  startInterview: (type: InterviewType, config?: any) => void;
+  startInterview: (type: InterviewType, config?: { tech?: string[], diff?: string }) => Promise<void>;
   answers: string[];
   setAnswer: (index: number, answer: string) => void;
   currentStep: number;
   setCurrentStep: (step: number) => void;
   questions: string[];
   isAnalyzing: boolean;
-  completeInterview: () => void;
+  isLoadingQuestions: boolean;
+  completeInterview: () => Promise<void>;
   resetSession: () => void;
+  results: EvaluationResult | null;
 }
-
-const MOCK_QUESTIONS = [
-  "Can you tell me about yourself and your background?",
-  "Why are you interested in this role at Replica?",
-  "Describe a challenging situation and how you handled it.",
-  "What are your greatest professional strengths?",
-  "How do you handle conflict in a team environment?",
-  "Where do you see yourself in five years?",
-  "Tell me about a time you failed and what you learned.",
-  "How do you prioritize your work under tight deadlines?",
-  "What is your approach to learning new technologies?",
-  "Do you have any questions for us?"
-];
 
 const SessionContext = createContext<SessionContextType | undefined>(undefined);
 
@@ -41,12 +49,37 @@ export function SessionProvider({ children }: { children: React.ReactNode }) {
   const [answers, setAnswers] = useState<string[]>(new Array(10).fill(''));
   const [currentStep, setCurrentStep] = useState(0);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
+  const [isLoadingQuestions, setIsLoadingQuestions] = useState(false);
+  const [questions, setQuestions] = useState<string[]>([]);
+  const [results, setResults] = useState<EvaluationResult | null>(null);
 
-  const startInterview = (type: InterviewType) => {
+  const startInterview = async (type: InterviewType, config?: { tech?: string[], diff?: string }) => {
     setInterviewType(type);
     setCurrentStep(0);
     setAnswers(new Array(10).fill(''));
-    setCurrentView('interview');
+    setIsLoadingQuestions(true);
+    
+    try {
+      const response = await fetch('/api/questions', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          domain: type,
+          techStack: config?.tech?.join(', ') || 'General',
+          difficulty: config?.diff || 'Medium'
+        })
+      });
+      
+      const data = await response.json();
+      if (data.questions) {
+        setQuestions(data.questions);
+        setCurrentView('interview');
+      }
+    } catch (error) {
+      console.error("Failed to fetch questions:", error);
+    } finally {
+      setIsLoadingQuestions(false);
+    }
   };
 
   const setAnswer = (index: number, answer: string) => {
@@ -55,13 +88,56 @@ export function SessionProvider({ children }: { children: React.ReactNode }) {
     setAnswers(newAnswers);
   };
 
-  const completeInterview = () => {
+  const completeInterview = async () => {
     setIsAnalyzing(true);
-    // Simulate AI analysis delay
-    setTimeout(() => {
+    setCurrentView('results');
+    
+    try {
+      const response = await fetch('/api/evaluate', {
+        method: 'POST',
+        body: JSON.stringify({
+          questions,
+          answers,
+          domain: interviewType
+        })
+      });
+
+      if (!response.body) return;
+
+      // Handle streaming response
+      const reader = response.body.getReader();
+      const decoder = new TextDecoder();
+      let accumulated = '';
+
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+        
+        accumulated += decoder.decode(value, { stream: true });
+        
+        // Try to parse partial JSON if possible, but for simplicity we'll just parse lines
+        // Vercel AI SDK text stream for objects sends partial JSON chunks or line-delimited
+        // In this case, toTextStreamResponse() sends the stream.
+        // For a more robust streaming UI, we should use useObject in the component.
+        // But let's try to parse the final result here for the context state.
+      }
+
+      // Final parse
+      try {
+        // Find the last complete JSON object in the stream if it's multiple chunks
+        // Or if it's just one big stringified object
+        const finalData = JSON.parse(accumulated);
+        setResults(finalData);
+      } catch (e) {
+        // If it's a stream of partial objects (like from streamObject), we might need to handle it differently
+        // But for context state, we usually want the final object.
+        console.error("Error parsing evaluation stream:", e);
+      }
+    } catch (error) {
+      console.error("Evaluation failed:", error);
+    } finally {
       setIsAnalyzing(false);
-      setCurrentView('results');
-    }, 3000);
+    }
   };
 
   const resetSession = () => {
@@ -69,6 +145,8 @@ export function SessionProvider({ children }: { children: React.ReactNode }) {
     setInterviewType(null);
     setCurrentStep(0);
     setAnswers(new Array(10).fill(''));
+    setQuestions([]);
+    setResults(null);
   };
 
   return (
@@ -81,10 +159,12 @@ export function SessionProvider({ children }: { children: React.ReactNode }) {
       setAnswer,
       currentStep,
       setCurrentStep,
-      questions: MOCK_QUESTIONS,
+      questions,
       isAnalyzing,
+      isLoadingQuestions,
       completeInterview,
-      resetSession
+      resetSession,
+      results
     }}>
       {children}
     </SessionContext.Provider>

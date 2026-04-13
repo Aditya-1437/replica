@@ -18,28 +18,45 @@ import {
 import { cn } from '@/lib/utils';
 
 export default function ResultsDashboard() {
-  const { questions, answers, resetSession } = useSession();
+  const { results, resetSession } = useSession();
   const { user } = useUser();
   const [selectedQuestionIndex, setSelectedQuestionIndex] = useState<number | null>(null);
 
-  // Mock metrics
+  if (!results) {
+    return (
+      <div className="min-h-screen bg-sage-bg flex items-center justify-center">
+        <div className="text-center">
+          <p className="text-slate-muted italic">Waiting for final evaluation results...</p>
+        </div>
+      </div>
+    );
+  }
+
+  // Map real metrics
   const metrics = [
-    { label: 'Communication Clarity', score: 92, icon: CheckCircle2, subtext: 'Very articulate responses' },
-    { label: 'Answer Confidence', score: 84, icon: Zap, subtext: 'High assertiveness detected' },
-    { label: 'Technical Accuracy', score: 88, icon: Award, subtext: 'Strong foundational knowledge' }
+    { 
+      label: 'Communication Clarity', 
+      score: results.metrics?.clarity || 0, 
+      icon: CheckCircle2, 
+      subtext: (results.metrics?.clarity || 0) > 80 ? 'Very articulate responses' : 'Keep practicing clarity' 
+    },
+    { 
+      label: 'Answer Confidence', 
+      score: results.metrics?.confidence || 0, 
+      icon: Zap, 
+      subtext: (results.metrics?.confidence || 0) > 80 ? 'High assertiveness detected' : 'Work on voice confidence' 
+    },
+    { 
+      label: 'Technical Accuracy', 
+      score: results.metrics?.technical || 0, 
+      icon: Award, 
+      subtext: (results.metrics?.technical || 0) > 80 ? 'Strong foundational knowledge' : 'Review core concepts' 
+    }
   ];
 
-  const strengths = [
-    "Precise use of industry terminology",
-    "Natural confidence in problem-solving explanations",
-    "Structured 'Situation-Task-Action-Result' (STAR) approach"
-  ];
-
-  const growthAreas = [
-    "Could provide more quantifiable results in examples",
-    "Occasional use of filler words in complex explanations",
-    "Room for deeper exploration of system design trade-offs"
-  ];
+  const safeStrengths = results.feedback?.strengths || [];
+  const safeGrowthAreas = results.feedback?.growthAreas || [];
+  const safeDetailedReview = results.detailedReview || [];
 
   const container = {
     hidden: { opacity: 0 },
@@ -98,17 +115,21 @@ export default function ResultsDashboard() {
                   cx="50"
                   cy="50"
                   initial={{ strokeDasharray: "0 251.2" }}
-                  animate={{ strokeDasharray: "213.5 251.2" }} // 85%
+                  animate={{ strokeDasharray: `${((results.overallScore || 0) / 100) * 251.2} 251.2` }}
                   transition={{ duration: 1.5, delay: 0.5, ease: "easeOut" }}
                 />
               </svg>
               <div className="absolute inset-0 flex flex-col items-center justify-center">
-                <span className="text-5xl font-serif font-bold text-slate-900">85</span>
+                <span className="text-5xl font-serif font-bold text-slate-900">{results.overallScore || 0}</span>
                 <span className="text-sm font-bold text-slate-400 uppercase tracking-widest">Score</span>
               </div>
             </div>
-            <p className="text-center font-medium text-slate-700">Excellent Performance</p>
-            <p className="text-center text-xs text-slate-400 mt-2 uppercase tracking-widest font-bold">Top 15% of Candidates</p>
+            <p className="text-center font-medium text-slate-700">
+              {(results.overallScore || 0) >= 90 ? 'Exceptional' : (results.overallScore || 0) >= 80 ? 'Excellent' : 'Good Progress'}
+            </p>
+            <p className="text-center text-xs text-slate-400 mt-2 uppercase tracking-widest font-bold">
+              Powered by Gemini 1.5 Pro
+            </p>
           </motion.div>
 
           {/* Metrics Grid */}
@@ -134,7 +155,6 @@ export default function ResultsDashboard() {
                   <h3 className="font-bold text-slate-900 mb-1">{metric.label}</h3>
                   <p className="text-xs text-slate-400 font-medium">{metric.subtext}</p>
                 </div>
-                {/* Visual indicator sparkline-ish simple line */}
                 <div className="mt-4 h-1.5 w-full bg-gray-50 rounded-full overflow-hidden">
                   <motion.div 
                     initial={{ width: 0 }}
@@ -161,7 +181,7 @@ export default function ResultsDashboard() {
               Key Strengths
             </h3>
             <ul className="space-y-4">
-              {strengths.map((s, i) => (
+              {safeStrengths.map((s, i) => (
                 <li key={i} className="flex gap-3 text-slate-600">
                   <div className="mt-1.5 w-1.5 h-1.5 rounded-full bg-sage-accent shrink-0" />
                   <span className="text-sm font-medium">{s}</span>
@@ -175,7 +195,7 @@ export default function ResultsDashboard() {
               Growth Areas
             </h3>
             <ul className="space-y-4">
-              {growthAreas.map((g, i) => (
+              {safeGrowthAreas.map((g, i) => (
                 <li key={i} className="flex gap-3 text-slate-600">
                   <div className="mt-1.5 w-1.5 h-1.5 rounded-full bg-slate-300 shrink-0" />
                   <span className="text-sm font-medium">{g}</span>
@@ -193,7 +213,7 @@ export default function ResultsDashboard() {
           className="space-y-4 mb-20"
         >
           <h3 className="text-2xl font-serif font-bold text-slate-900 px-2">Detailed Question Review</h3>
-          {questions.map((q, i) => (
+          {safeDetailedReview.map((review, i) => (
             <motion.div 
               key={i}
               className="bg-white rounded-2xl overflow-hidden border border-white shadow-sm"
@@ -206,7 +226,7 @@ export default function ResultsDashboard() {
                   <span className="w-8 h-8 rounded-lg bg-gray-100 flex items-center justify-center text-xs font-bold text-slate-500">
                     {i + 1}
                   </span>
-                  <span className="font-semibold text-slate-800 line-clamp-1">{q}</span>
+                  <span className="font-semibold text-slate-800 line-clamp-1">{review.question}</span>
                 </div>
                 <ChevronRight className={cn(
                   "w-5 h-5 text-slate-300 transition-transform duration-300",
@@ -222,11 +242,15 @@ export default function ResultsDashboard() {
                 >
                   <div className="bg-gray-50 p-5 rounded-2xl">
                     <h4 className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-3">Your Answer</h4>
-                    <p className="text-slate-700 leading-relaxed italic">{answers[i] || "No response provided."}</p>
+                    <p className="text-slate-700 leading-relaxed italic">{review.userAnswer || "No response provided."}</p>
+                  </div>
+                  <div className="bg-white p-5 rounded-2xl border border-gray-100">
+                    <h4 className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-3">Expected Direction</h4>
+                    <p className="text-slate-700 leading-relaxed">{review.expectedAnswer}</p>
                   </div>
                   <div className="bg-sage-accent/5 p-5 rounded-2xl border border-sage-accent/10">
-                    <h4 className="text-xs font-bold text-sage-accent uppercase tracking-widest mb-3">AI Recommendation</h4>
-                    <p className="text-slate-700 leading-relaxed font-medium">To improve this answer, focus more on the 'Results' part of your STAR story. Quantify the impact (e.g., 'increased efficiency by 30%') to provide concrete value.</p>
+                    <h4 className="text-xs font-bold text-sage-accent uppercase tracking-widest mb-3">AI Feedback</h4>
+                    <p className="text-slate-700 leading-relaxed font-medium">{review.specificFeedback}</p>
                   </div>
                 </motion.div>
               )}
