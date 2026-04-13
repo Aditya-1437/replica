@@ -39,6 +39,7 @@ export default function Footer() {
                 <li><Link href="/" className="hover:text-sage-accent transition-colors">Technical Track</Link></li>
                 <li><Link href="/" className="hover:text-sage-accent transition-colors">Behavioral Track</Link></li>
                 <li><Link href="/pricing" className="hover:text-sage-accent transition-colors">Pricing</Link></li>
+                <li><Link href="/support" className="hover:text-sage-accent transition-colors">Support</Link></li>
               </ul>
             </div>
             <div className="space-y-6">

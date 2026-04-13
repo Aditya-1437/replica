@@ -37,6 +37,12 @@ export default function Navbar() {
             >
               Pricing
             </Link>
+            <Link 
+              href="/support" 
+              className={`text-sm font-semibold transition-colors ${pathname === '/support' ? 'text-sage-accent' : 'text-slate-muted hover:text-sage-accent'}`}
+            >
+              Support
+            </Link>
           </div>
         </div>
 
