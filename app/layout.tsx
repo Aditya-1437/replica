@@ -17,6 +17,9 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "Replica | Master Your Next Interview",
   description: "A private, text-based AI environment to sharpen your interview responses without the pressure of a camera.",
+  icons: {
+    icon: '/favicon.svg',
+  },
 };
 
 export default function RootLayout({
