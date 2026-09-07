@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Geist, Geist_Mono, Syne, Bricolage_Grotesque } from "next/font/google";
 import "./globals.css";
 import { UserProvider } from "@/context/UserContext";
 import { SessionProvider } from "@/context/SessionContext";
@@ -11,6 +11,17 @@ const geistSans = Geist({
 
 const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
+  subsets: ["latin"],
+});
+
+const syne = Syne({
+  variable: "--font-syne",
+  subsets: ["latin"],
+  weight: ["700", "800"],
+});
+
+const bricolage = Bricolage_Grotesque({
+  variable: "--font-bricolage",
   subsets: ["latin"],
 });
 
@@ -30,7 +41,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased min-h-screen bg-sage-bg selection:bg-sage-accent/20 selection:text-sage-accent`}
+        className={`${geistSans.variable} ${geistMono.variable} ${syne.variable} ${bricolage.variable} antialiased min-h-screen bg-sage-bg selection:bg-orange-500/20 selection:text-orange-600`}
       >
         <UserProvider>
           <SessionProvider>

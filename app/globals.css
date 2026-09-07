@@ -1,23 +1,48 @@
 @import "tailwindcss";
 
 :root {
-  --background: #F0F4F2;
-  --foreground: #171717;
-  --sage-accent: #4A6741;
-  --slate-muted: #607D8B;
+  --background: #FAFAFA;
+  --foreground: #09090B;
+  --sage-accent: #EA580C;
+  --slate-muted: #71717A;
   --white: #FFFFFF;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --color-sage-bg: #F0F4F2;
-  --color-sage-accent: var(--sage-accent);
+  --color-sage-bg: #FAFAFA;
+  --color-sage-accent: #EA580C;
+  --color-brand-orange: #EA580C;
+  --color-brand-black: #09090B;
   --color-slate-muted: var(--slate-muted);
   --color-white: var(--white);
 
   --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui;
   --font-mono: var(--font-geist-mono), ui-monospace, SFMono-Regular;
+  --font-brand: var(--font-syne), sans-serif;
+  --font-display: var(--font-bricolage), sans-serif;
+}
+
+.font-brand {
+  font-family: var(--font-syne), sans-serif;
+}
+
+.font-display {
+  font-family: var(--font-bricolage), sans-serif;
+}
+
+.brand-wordmark {
+  font-family: var(--font-syne), sans-serif;
+  letter-spacing: 0.16em;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.brand-gradient-text {
+  background: linear-gradient(135deg, #FF6B00 0%, #EA580C 50%, #C2410C 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
 
 body {
@@ -27,7 +52,7 @@ body {
 
 @layer base {
   * {
-    border-color: #E5E7EB;
+    border-color: #E4E4E7;
   }
 }
 
@@ -45,5 +70,5 @@ body {
 
 .custom-cursor {
   animation: soft-pulse 1.2s ease-in-out infinite;
-  background-color: #4A6741;
+  background-color: #EA580C;
 }

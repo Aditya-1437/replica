@@ -5,7 +5,9 @@ import { useSession } from "@/context/SessionContext";
 import Gatekeeper from "@/components/Gatekeeper";
 import Navbar from "@/components/Navbar";
 import Hero from "@/components/Hero";
-import InterviewSection from "@/components/InterviewSection";
+import CompanyTicker from "@/components/CompanyTicker";
+import ComparisonSection from "@/components/ComparisonSection";
+import ReviewsSection from "@/components/ReviewsSection";
 import InterviewSession from "@/components/InterviewSession";
 import ResultsDashboard from "@/components/ResultsDashboard";
 import Footer from "@/components/Footer";
@@ -42,7 +44,9 @@ export default function Home() {
                 <Navbar />
                 <div className="flex-1">
                   <Hero />
-                  <InterviewSection />
+                  <CompanyTicker />
+                  <ComparisonSection />
+                  <ReviewsSection />
                 </div>
                 <Footer />
               </>

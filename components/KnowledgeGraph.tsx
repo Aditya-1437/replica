@@ -4,14 +4,14 @@ import React from 'react';
 import { motion } from 'framer-motion';
 
 const nodes = [
-  { id: 1, label: 'Logic', x: '20%', y: '25%', color: '#4A6741' },
-  { id: 2, label: 'Communication', x: '50%', y: '15%', color: '#607D8B' },
-  { id: 3, label: 'Confidence', x: '80%', y: '30%', color: '#4A6741' },
-  { id: 4, label: 'STAR Method', x: '15%', y: '55%', color: '#607D8B' },
-  { id: 5, label: 'Resume', x: '45%', y: '45%', color: '#4A6741' },
-  { id: 6, label: 'Technical Skills', x: '75%', y: '60%', color: '#607D8B' },
-  { id: 7, label: 'HR', x: '35%', y: '80%', color: '#4A6741' },
-  { id: 8, label: 'Feedback', x: '65%', y: '85%', color: '#607D8B' },
+  { id: 1, label: 'Logic', x: '20%', y: '25%', color: '#EA580C' },
+  { id: 2, label: 'Communication', x: '50%', y: '15%', color: '#18181B' },
+  { id: 3, label: 'Confidence', x: '80%', y: '30%', color: '#EA580C' },
+  { id: 4, label: 'STAR Method', x: '15%', y: '55%', color: '#18181B' },
+  { id: 5, label: 'Resume', x: '45%', y: '45%', color: '#EA580C' },
+  { id: 6, label: 'Technical Skills', x: '75%', y: '60%', color: '#18181B' },
+  { id: 7, label: 'HR', x: '35%', y: '80%', color: '#EA580C' },
+  { id: 8, label: 'Feedback', x: '65%', y: '85%', color: '#18181B' },
 ];
 
 const connections = [

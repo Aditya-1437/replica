@@ -2,10 +2,26 @@
 
 import React, { createContext, useContext, useState, useEffect } from 'react';
 
-interface User {
+export interface User {
   name: string;
   email: string;
   techStack?: string;
+  role?: string;
+  seniority?: string;
+  targetCompanies?: string;
+  notificationsEmail?: boolean;
+  noiseSuppression?: boolean;
+  aiVoicePace?: string;
+  defaultDifficulty?: string;
+  subscriptionPlan?: string;
+  subscriptionStatus?: 'active' | 'trial' | 'canceled';
+  subscriptionBilling?: 'annual' | 'monthly';
+  subscriptionStartDate?: string;
+  subscriptionEndDate?: string;
+  seats?: number;
+  totalDrillsCompleted?: number;
+  streakDays?: number;
+  avgScore?: number;
 }
 
 interface UserContextType {
@@ -26,7 +42,24 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
     const savedUser = typeof window !== 'undefined' ? localStorage.getItem('replica_user') : null;
     if (savedUser) {
       try {
-        setUser(JSON.parse(savedUser));
+        const parsed = JSON.parse(savedUser);
+        // Default enriched fields for seamless experience
+        const enrichedUser: User = {
+          techStack: 'Full Stack & System Design',
+          role: 'Software Engineer',
+          seniority: 'Senior (L5 / Staff)',
+          subscriptionPlan: 'Ascent Pro',
+          subscriptionStatus: 'active',
+          subscriptionBilling: 'annual',
+          subscriptionStartDate: 'Oct 12, 2025',
+          subscriptionEndDate: 'Oct 12, 2026',
+          seats: 1,
+          totalDrillsCompleted: 18,
+          streakDays: 4,
+          avgScore: 86,
+          ...parsed
+        };
+        setUser(enrichedUser);
       } catch (e) {
         console.error('Failed to parse saved user', e);
       }
@@ -35,7 +68,22 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   const login = (name: string, email: string) => {
-    const newUser = { name, email };
+    const newUser: User = { 
+      name, 
+      email,
+      techStack: 'Full Stack & System Design',
+      role: 'Software Engineer',
+      seniority: 'Senior (L5 / Staff)',
+      subscriptionPlan: 'Ascent Pro',
+      subscriptionStatus: 'active',
+      subscriptionBilling: 'annual',
+      subscriptionStartDate: 'Oct 12, 2025',
+      subscriptionEndDate: 'Oct 12, 2026',
+      seats: 1,
+      totalDrillsCompleted: 18,
+      streakDays: 4,
+      avgScore: 86
+    };
     setUser(newUser);
     localStorage.setItem('replica_user', JSON.stringify(newUser));
   };
