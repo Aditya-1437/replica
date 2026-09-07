@@ -2,8 +2,8 @@ import { Metadata } from 'next';
 import AccountContent from './AccountContent';
 
 export const metadata: Metadata = {
-  title: "Replica | My Dashboard",
-  description: "Track your growth, view your metrics, and refine your interview presence.",
+  title: "Replica | Candidate Workspace & Performance Analytics",
+  description: "Track your interview metrics, score progression, STAR alignment telemetry, AI diagnostic coaching, and manage your account & subscription.",
 };
 
 export default function AccountPage() {

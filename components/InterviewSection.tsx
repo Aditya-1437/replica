@@ -49,11 +49,11 @@ export default function InterviewSection() {
   };
 
   return (
-    <section className="py-24 bg-white/30">
+    <section className="py-24 bg-white/30" id="practice-section">
       <div className="max-w-7xl mx-auto px-6">
         <div className="mb-16 text-center">
-          <h2 className="text-3xl font-serif font-bold text-slate-900 mb-4">Choose Your Path</h2>
-          <p className="text-slate-muted italic text-lg">Select a mode to begin your simulation</p>
+          <h2 className="text-3xl font-sans font-extrabold text-slate-950 mb-4 tracking-tight">Choose Your Path</h2>
+          <p className="text-slate-600 font-medium text-lg">Select a mode to begin your simulation</p>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
@@ -82,7 +82,7 @@ export default function InterviewSection() {
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                   onClick={handleStart}
-                  className="px-12 py-5 bg-sage-accent text-white rounded-2xl font-bold text-xl flex items-center gap-3 shadow-2xl shadow-sage-accent/30"
+                  className="px-12 py-5 bg-orange-600 text-white rounded-2xl font-bold text-xl flex items-center gap-3 shadow-2xl shadow-orange-600/30 hover:bg-orange-500 transition-all"
                 >
                   <Play className="w-6 h-6 fill-current" />
                   Confirm & Start
